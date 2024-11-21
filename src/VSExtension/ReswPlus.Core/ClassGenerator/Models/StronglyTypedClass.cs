@@ -10,8 +10,9 @@ namespace ReswPlus.Core.ClassGenerator.Models
     {
         public bool IsAdvanced{ get; set; }
         public string[] Namespaces { get; set; }
-        public string ResoureFile { get; set; }
+        public string ResourceMap { get; set; }
         public string ClassName { get; set; }
+        public string PriFile { get; set; }
 
         public List<Localization> Localizations { get; set; } = new List<Localization>();
     }

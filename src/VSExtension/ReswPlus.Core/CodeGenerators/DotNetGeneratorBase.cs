@@ -13,7 +13,7 @@ namespace ReswPlus.Core.CodeGenerators
         protected abstract void OpenNamespace(CodeStringBuilder builder, IEnumerable<string> namespaceName);
         protected abstract void CloseNamespace(CodeStringBuilder builder, IEnumerable<string> namespaceName);
 
-        protected abstract void OpenStronglyTypedClass(CodeStringBuilder builder, string resourceFileName, string className);
+        protected abstract void OpenStronglyTypedClass(CodeStringBuilder builder, StronglyTypedClass info);
         protected abstract void CloseStronglyTypedClass(CodeStringBuilder builder);
         protected abstract void OpenRegion(CodeStringBuilder builder, string name);
         protected abstract void CloseRegion(CodeStringBuilder builder, string name);
@@ -21,7 +21,7 @@ namespace ReswPlus.Core.CodeGenerators
         protected abstract void CreateFormatMethod(CodeStringBuilder builder, string key, bool isProperty, IEnumerable<IFormatTagParameter> parameters, string summary = null,
             IEnumerable<FunctionFormatTagParameter> extraParameters = null, FunctionFormatTagParameter parameterForPluralization = null, bool supportNoneState = false, FunctionFormatTagParameter parameterForVariant = null);
 
-        protected abstract void CreateMarkupExtension(CodeStringBuilder builder, string resourceFileName, string className, IEnumerable<string> keys);
+        protected abstract void CreateMarkupExtension(CodeStringBuilder builder, StronglyTypedClass info, IEnumerable<string> keys);
         protected abstract IEnumerable<GeneratedFile> GetGeneratedFiles(CodeStringBuilder builder, string baseFilename);
 
         public IEnumerable<GeneratedFile> GetGeneratedFiles(string baseFilename, StronglyTypedClass info, ResourceInfo.ResourceFileInfo resourceFileInfo)
@@ -30,7 +30,7 @@ namespace ReswPlus.Core.CodeGenerators
             GenerateHeaders(builder, info.IsAdvanced);
             AddNewLine(builder);
             OpenNamespace(builder, info.Namespaces);
-            OpenStronglyTypedClass(builder, info.ResoureFile, info.ClassName);
+            OpenStronglyTypedClass(builder, info);
 
             foreach (var item in info.Localizations)
             {
@@ -54,7 +54,7 @@ namespace ReswPlus.Core.CodeGenerators
 
             CloseStronglyTypedClass(builder);
             AddNewLine(builder);
-            CreateMarkupExtension(builder, info.ResoureFile, info.ClassName + "Extension", info.Localizations.Where(i => i is Localization).Select(s => s.Key));
+            CreateMarkupExtension(builder, info, info.Localizations.Where(i => i is Localization).Select(s => s.Key));
             CloseNamespace(builder, info.Namespaces);
             return GetGeneratedFiles(builder, baseFilename);
         }

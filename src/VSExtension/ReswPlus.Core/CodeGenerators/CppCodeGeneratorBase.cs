@@ -120,12 +120,12 @@ namespace ReswPlus.Core.CodeGenerators
             HeaderFileGenerateHeaders(builderHeader, info.ClassName, info.Namespaces, info.IsAdvanced);
             builderHeader.AppendEmptyLine();
             HeaderOpenNamespace(builderHeader, namespacesToUse, supportMultiNamespaceDeclaration);
-            HeaderOpenStronglyTypedClass(builderHeader, info.ResoureFile, info.ClassName);
+            HeaderOpenStronglyTypedClass(builderHeader, info.ResourceMap, info.ClassName);
             builderHeader.AppendEmptyLine();
 
             CppFileGenerateHeaders(builderCpp, precompiledHeader, headerFileName, baseNamespace, info.ClassName, info.Namespaces, info.IsAdvanced);
             builderCpp.AppendEmptyLine();
-            CppGenerateStronglyTypedClassStaticFunc(builderCpp, namespaceResourceClass, info.ResoureFile);
+            CppGenerateStronglyTypedClassStaticFunc(builderCpp, namespaceResourceClass, info.ResourceMap);
             builderCpp.AppendEmptyLine();
 
             var firstLocalization = true;
@@ -156,11 +156,11 @@ namespace ReswPlus.Core.CodeGenerators
             }
             HeaderCloseStronglyTypedClass(builderHeader);
             builderHeader.AppendEmptyLine();
-            HeaderCreateMarkupExtension(builderHeader, info.ResoureFile, markupClassName, info.Localizations.Where(i => i is Localization).Select(s => s.Key), info.Namespaces);
+            HeaderCreateMarkupExtension(builderHeader, info.ResourceMap, markupClassName, info.Localizations.Where(i => i is Localization).Select(s => s.Key), info.Namespaces);
             HeaderCloseNamespace(builderHeader, namespacesToUse, supportMultiNamespaceDeclaration);
             HeaderAddExtra(builderHeader, info);
             builderCpp.AppendEmptyLine();
-            CppCreateMarkupExtension(builderCpp, namespaceMarkupExtensionClass, info.ResoureFile, markupClassName, info.Localizations.Where(i => i is Localization).Select(s => s.Key));
+            CppCreateMarkupExtension(builderCpp, namespaceMarkupExtensionClass, info.ResourceMap, markupClassName, info.Localizations.Where(i => i is Localization).Select(s => s.Key));
 
             yield return new GeneratedFile() { Filename = headerFileName, Content = builderHeader.GetString() };
             yield return new GeneratedFile() { Filename = cppFileName, Content = builderCpp.GetString() };

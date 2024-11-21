@@ -95,7 +95,8 @@ namespace ReswPlus.Core.ClassGenerator
                 IsAdvanced = isAdvanced,
                 ClassName = className,
                 Namespaces = namespaceToUse,
-                ResoureFile = resouceNameForResourceLoader
+                ResourceMap = resouceNameForResourceLoader,
+                PriFile = _resourceFileInfo.PriFile,
             };
 
             var stringItems = reswInfo.Items

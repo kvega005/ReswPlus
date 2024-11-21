@@ -1,4 +1,6 @@
+using ReswPlus.Core.ClassGenerator.Models;
 using ReswPlus.Core.ResourceParser;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -46,10 +48,10 @@ namespace ReswPlus.Core.CodeGenerators
             {
                 builder.AppendLine("// The NuGet package ReswPlusLib is necessary to support Pluralization.");
             }
-            builder.AppendLine("using System;");
-            builder.AppendLine("using Windows.ApplicationModel.Resources;");
-            builder.AppendLine("using Windows.UI.Xaml.Markup;");
-            builder.AppendLine("using Windows.UI.Xaml.Data;");
+            
+            builder.AppendLine("using Microsoft.Windows.ApplicationModel.Resources;");
+            builder.AppendLine("using Microsoft.UI.Xaml.Markup;");
+            builder.AppendLine("using Microsoft.UI.Xaml.Data;");
         }
 
         protected override void OpenNamespace(CodeStringBuilder builder, IEnumerable<string> namespaces)
@@ -70,19 +72,18 @@ namespace ReswPlus.Core.CodeGenerators
             }
         }
 
-        protected override void OpenStronglyTypedClass(CodeStringBuilder builder, string resourceFilename, string className)
+        protected override void OpenStronglyTypedClass(CodeStringBuilder builder, StronglyTypedClass info)
         {
-
             builder.AppendLine($"[global::System.CodeDom.Compiler.GeneratedCodeAttribute(\"{Constants.ReswPlusName}\", \"{Constants.ReswPlusExtensionVersion}\")]");
             builder.AppendLine("[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]");
             builder.AppendLine("[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]");
-            builder.AppendLine($"public static class {className} {{");
+            builder.AppendLine($"public static class {info.ClassName} {{");
             builder.AddLevel();
             builder.AppendLine("private static ResourceLoader _resourceLoader;");
-            builder.AppendLine($"static {className}()");
+            builder.AppendLine($"static {info.ClassName}()");
             builder.AppendLine("{");
             builder.AddLevel();
-            builder.AppendLine($"_resourceLoader = ResourceLoader.GetForViewIndependentUse(\"{resourceFilename}\");");
+            builder.AppendLine($"_resourceLoader = new ResourceLoader(\"{info.PriFile}\", \"{info.ResourceMap}\");");
             builder.RemoveLevel();
             builder.AppendLine("}");
         }
@@ -214,13 +215,13 @@ namespace ReswPlus.Core.CodeGenerators
 
         }
 
-        protected override void CreateMarkupExtension(CodeStringBuilder builder, string resourceFileName, string className, IEnumerable<string> keys)
+        protected override void CreateMarkupExtension(CodeStringBuilder builder, StronglyTypedClass info, IEnumerable<string> keys)
         {
             builder.AppendLine($"[global::System.CodeDom.Compiler.GeneratedCodeAttribute(\"{Constants.ReswPlusName}\", \"{Constants.ReswPlusExtensionVersion}\")]");
             builder.AppendLine("[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]");
             builder.AppendLine("[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]");
             builder.AppendLine("[MarkupExtensionReturnType(ReturnType = typeof(string))]");
-            builder.AppendLine($"public partial class {className}: MarkupExtension");
+            builder.AppendLine($"public partial class {info.ClassName}Extension: MarkupExtension");
             builder.AppendLine("{");
             builder.AddLevel();
             builder.AppendLine("public enum KeyEnum");
@@ -235,10 +236,10 @@ namespace ReswPlus.Core.CodeGenerators
             builder.AppendLine("}");
             builder.AppendEmptyLine();
             builder.AppendLine("private static ResourceLoader _resourceLoader;");
-            builder.AppendLine($"static {className}()");
+            builder.AppendLine($"static {info.ClassName}Extension()");
             builder.AppendLine("{");
             builder.AddLevel();
-            builder.AppendLine($"_resourceLoader = ResourceLoader.GetForViewIndependentUse(\"{resourceFileName}\");");
+            builder.AppendLine($"_resourceLoader = new ResourceLoader(\"{info.PriFile}\", \"{info.ResourceMap}\");");
             builder.RemoveLevel();
             builder.AppendLine("}");
             builder.AppendLine("public KeyEnum Key { get; set;}");

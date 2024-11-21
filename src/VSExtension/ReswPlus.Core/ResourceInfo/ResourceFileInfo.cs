@@ -14,11 +14,13 @@ namespace ReswPlus.Core.ResourceInfo
     {
         public string Path { get; }
         public IProject Project { get; }
+        public string PriFile { get; }
 
-        public ResourceFileInfo(string path, IProject parentProject)
+        public ResourceFileInfo(string path, IProject parentProject, string priFile)
         {
             Path = path;
             Project = parentProject;
+            PriFile = priFile;
         }
     }
 }

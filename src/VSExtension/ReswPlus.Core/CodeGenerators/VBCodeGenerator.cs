@@ -1,3 +1,4 @@
+using ReswPlus.Core.ClassGenerator.Models;
 using ReswPlus.Core.ResourceParser;
 using System.Collections.Generic;
 using System.Linq;
@@ -78,19 +79,19 @@ namespace ReswPlus.Core.CodeGenerators
             }
         }
 
-        protected override void OpenStronglyTypedClass(CodeStringBuilder builder, string resourceFilename, string className)
+        protected override void OpenStronglyTypedClass(CodeStringBuilder builder, StronglyTypedClass info)
         {
 
             builder.AppendLine($"<System.CodeDom.Compiler.GeneratedCodeAttribute(\"{Constants.ReswPlusName}\", \"{Constants.ReswPlusExtensionVersion}\")>");
             builder.AppendLine("<System.Diagnostics.DebuggerNonUserCodeAttribute()>");
             builder.AppendLine("<System.Runtime.CompilerServices.CompilerGeneratedAttribute()>");
-            builder.AppendLine($"Public Class {className}");
+            builder.AppendLine($"Public Class {info.ClassName}");
             builder.AddLevel();
             builder.AppendLine("Private Shared _resourceLoader as ResourceLoader");
             builder.AppendEmptyLine();
             builder.AppendLine($"Shared Sub New()");
             builder.AddLevel();
-            builder.AppendLine($"_resourceLoader = ResourceLoader.GetForViewIndependentUse(\"{resourceFilename}\")");
+            builder.AppendLine($"_resourceLoader = ResourceLoader.GetForViewIndependentUse(\"{info.ResourceMap}\")");
             builder.RemoveLevel();
             builder.AppendLine("End Sub");
         }
@@ -220,13 +221,13 @@ namespace ReswPlus.Core.CodeGenerators
             }
         }
 
-        protected override void CreateMarkupExtension(CodeStringBuilder builder, string resourceFileName, string className, IEnumerable<string> keys)
+        protected override void CreateMarkupExtension(CodeStringBuilder builder, StronglyTypedClass info, IEnumerable<string> keys)
         {
             builder.AppendLine($"<System.CodeDom.Compiler.GeneratedCodeAttribute(\"{Constants.ReswPlusName}\", \"{Constants.ReswPlusExtensionVersion}\")>");
             builder.AppendLine("<System.Diagnostics.DebuggerNonUserCodeAttribute()>");
             builder.AppendLine("<System.Runtime.CompilerServices.CompilerGeneratedAttribute()>");
             builder.AppendLine("<MarkupExtensionReturnType(ReturnType:=GetType(String))>");
-            builder.AppendLine($"Public Class {className}");
+            builder.AppendLine($"Public Class {info.ClassName}Extension");
             builder.AddLevel();
             builder.AppendLine("Inherits MarkupExtension");
             builder.AppendLine("Public Enum KeyEnum");
@@ -242,7 +243,7 @@ namespace ReswPlus.Core.CodeGenerators
             builder.AppendLine("Private Shared _resourceLoader as ResourceLoader");
             builder.AppendLine("Shared Sub New()");
             builder.AddLevel();
-            builder.AppendLine($"_resourceLoader = ResourceLoader.GetForViewIndependentUse(\"{resourceFileName}\")");
+            builder.AppendLine($"_resourceLoader = ResourceLoader.GetForViewIndependentUse(\"{info.ResourceMap}\")");
             builder.RemoveLevel();
             builder.AppendLine("End Sub");
             builder.AppendEmptyLine();
